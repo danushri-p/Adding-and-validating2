@@ -19,33 +19,6 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// ✅ User Registration Endpoint
-app.post('/register', async (req, res) => {
-  const { email, password } = req.body;
-
-  // Check if fields are empty
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email and password are required' });
-  }
-
-  try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
-    }
-
-    // Hash password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ email, password: hashedPassword });
-    await newUser.save();
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
 // ✅ User Login Endpoint
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
